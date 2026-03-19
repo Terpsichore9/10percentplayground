@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>10% Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:      #FAF6EE;
+      --mustard:    #C9A84C;
+      --mustard-lt: #E2C97E;
+      --terra:      #C4775A;
+      --terra-lt:   #DFA58E;
+      --ink:        #2B2318;
+      --mid:        #9A8B78;
+      --border:     #E0D5C3;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Background canvas with soft blobs */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      filter: blur(90px);
+    }
+
+    .blob-1 {
+      width: 55vw;
+      height: 55vw;
+      background: radial-gradient(circle at 40% 40%, #E2C97E55, #C9A84C22, transparent 70%);
+      top: -15vw;
+      right: -10vw;
+      animation: blobFade 2.4s ease forwards 0.2s, blob1drift 18s ease-in-out infinite 2.6s;
+    }
+
+    .blob-2 {
+      width: 45vw;
+      height: 45vw;
+      background: radial-gradient(circle at 60% 60%, #DFA58E44, #C4775A22, transparent 70%);
+      bottom: -10vw;
+      left: -8vw;
+      animation: blobFade 2.4s ease forwards 0.5s, blob2drift 22s ease-in-out infinite 2.9s;
+    }
+
+    .blob-3 {
+      width: 30vw;
+      height: 30vw;
+      background: radial-gradient(circle, #E2C97E33, transparent 70%);
+      top: 50%;
+      left: 20%;
+      animation: blobFade 2.4s ease forwards 0.8s, blob3drift 14s ease-in-out infinite 3.2s;
+    }
+
+    @keyframes blobFade {
+      to { opacity: 1; }
+    }
+    @keyframes blob1drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(-2vw, 2vw) scale(1.04); }
+      66%      { transform: translate(1.5vw, -1.5vw) scale(0.97); }
+    }
+    @keyframes blob2drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(3vw, -2vw) scale(1.06); }
+    }
+    @keyframes blob3drift {
+      0%,100% { transform: translate(0,0); }
+      40%      { transform: translate(-1.5vw, 2vw); }
+      70%      { transform: translate(2vw, -1vw); }
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 30px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.3s;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Little playful badge for the 10% */
+    .logo-badge {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--mustard);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .substack-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--mid);
+      font-size: 13px;
+      font-weight: 400;
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.5);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .substack-header:hover {
+      border-color: var(--mustard);
+      color: var(--ink);
+    }
+
+    .substack-header svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    /* Main */
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    /* Playful tag above headline */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.55s;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mustard);
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(40px, 6.5vw, 76px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      max-width: 740px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.7s;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--terra);
+    }
+
+    .tagline {
+      font-size: clamp(15px, 1.8vw, 17px);
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 420px;
+      margin: 0 auto 60px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.85s;
+    }
+
+    /* Three small value pills */
+    .pills-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1s;
+    }
+
+    .value-pill {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(6px);
+      padding: 7px 16px;
+      border-radius: 100px;
+    }
+
+    .value-pill.mustard {
+      border-color: var(--mustard-lt);
+      background: rgba(226, 201, 126, 0.15);
+      color: #7A5F1A;
+    }
+
+    .value-pill.terra {
+      border-color: var(--terra-lt);
+      background: rgba(223, 165, 142, 0.15);
+      color: #7A3D28;
+    }
+
+    /* Coming Soon CTA */
+    .coming-soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      background: var(--mustard);
+      color: var(--cream);
+      padding: 14px 28px;
+      border-radius: 100px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.15s;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+      letter-spacing: 0.04em;
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 10;
+      padding: 24px 52px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.3s;
+    }
+
+    footer p {
+      font-size: 12px;
+      color: var(--mid);
+      letter-spacing: 0.04em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      header, footer { padding: 20px 24px; }
+      .pills-row { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <div class="logo-badge">10%</div>
+      <span class="logo-name">Playground</span>
+    </div>
+    <a class="substack-header" href="https://substack.com" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="5" fill="#FF6719"/>
+        <path d="M5 7.5h14v1.5H5V7.5zm0 3.5h14v1.5H5V11zm0 3.5l7 3.5 7-3.5V19l-7 3.5L5 19v-4.5z" fill="white"/>
+      </svg>
+      Substack
+    </a>
+  </header>
+
+  <main>
+    <p class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      Experience Design for Everyone
+      <span class="eyebrow-dot"></span>
+    </p>
+
+    <h1>Demystifying experience design,<br><em>one experiment at a time.</em></h1>
+
+    <p class="tagline">
+      Experience is not just digital. Everyone has 10% to give,
+      and every experiment only takes 10% of what you think it will.
+    </p>
+
+    <div class="pills-row">
+      <span class="value-pill mustard">10% effort</span>
+      <span class="value-pill">Not just digital</span>
+      <span class="value-pill terra">For everyone</span>
+    </div>
+
+    <div class="coming-soon-badge">Coming Soon</div>
+  </main>
+
+  <footer>
+    <p>2026 · 10% Playground · 10percentplayground.com</p>
+  </footer>
+
+</body>
+</html>
